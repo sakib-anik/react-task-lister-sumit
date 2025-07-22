@@ -1,7 +1,9 @@
-import { useState } from "react";
-export default function Task({ task, onSave, onCheckBoxChange, onDelete }) {
+import { useContext, useState } from "react";
+import { TaskDispatchContext } from "../../contexts/TaskContextProvider";
+export default function Task({ task }) {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(task.text);
+  const dispatch = useContext(TaskDispatchContext);
   let content;
   if (isEditing) {
     content = (
@@ -14,7 +16,11 @@ export default function Task({ task, onSave, onCheckBoxChange, onDelete }) {
         <button
           type="button"
           onClick={() => {
-            onSave(task.id, text);
+            dispatch({
+              type: "changedText",
+              text,
+              id: task.id,
+            });
             setIsEditing(false);
           }}
         >
@@ -42,10 +48,24 @@ export default function Task({ task, onSave, onCheckBoxChange, onDelete }) {
       <input
         type="checkbox"
         checked={task.done}
-        onChange={(e) => onCheckBoxChange(task.id, e.target.checked)}
+        onChange={(e) => {
+          dispatch({
+            type: "changedCheckbox",
+            checked: e.target.checked,
+            id: task.id,
+          });
+        }}
       />
       {content}
-      <button type="button" onClick={() => onDelete(task.id)}>
+      <button
+        type="button"
+        onClick={() => {
+          dispatch({
+            type: "deleted",
+            id: task.id,
+          });
+        }}
+      >
         Delete
       </button>
     </div>

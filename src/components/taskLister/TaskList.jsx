@@ -1,21 +1,12 @@
+import { useContext } from "react";
+import { TaskContext } from "../../contexts/TaskContextProvider";
 import Task from "./Task";
-
-export default function TaskList({
-  tasks,
-  onSave,
-  onCheckBoxChange,
-  onDelete,
-}) {
+export default function TaskList() {
+  const tasks = useContext(TaskContext);
   return (
     <>
       {tasks.map((task) => (
-        <Task
-          key={task.id}
-          task={task}
-          onSave={onSave}
-          onCheckBoxChange={onCheckBoxChange}
-          onDelete={onDelete}
-        />
+        <Task key={task.id} task={task} />
       ))}
     </>
   );
